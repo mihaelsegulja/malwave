@@ -4,6 +4,7 @@ using System;
 public partial class Player : CharacterBody2D
 {
 	[Export] public float Speed = 200f;
+	[Export] public PackedScene BulletScene;
 
 	public override void _Process(double delta)
 	{
@@ -13,10 +14,30 @@ public partial class Player : CharacterBody2D
 		if (Input.IsActionPressed("ui_left")) direction.X -= 1;
 		if (Input.IsActionPressed("ui_down")) direction.Y += 1;
 		if (Input.IsActionPressed("ui_up")) direction.Y -= 1;
-		GD.Print(direction);
+		//GD.Print(direction);
 
 		Position += direction * Speed * (float)delta;
 		
 		MoveAndSlide();
+		
+		if (Input.IsActionJustPressed("shoot"))
+		{
+			Shoot();
+		}
+
 	}
+		private void Shoot() 
+		{
+			var bullet = (Bullet)BulletScene.Instantiate();
+			bullet.Position = Position;
+
+			// aim toward mouse
+			Vector2 mousePos = GetGlobalMousePosition();
+			bullet.Direction = (mousePos - Position).Normalized();
+
+			// rotate the whole bullet scene
+			bullet.Rotation = bullet.Direction.Angle();
+
+			GetTree().CurrentScene.AddChild(bullet);
+		}
 }
