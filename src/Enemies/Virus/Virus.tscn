@@ -1,0 +1,50 @@
+[gd_scene load_steps=8 format=3 uid="uid://dn6yiokci5vt7"]
+
+[ext_resource type="Script" uid="uid://1lmcvtvdh1ag" path="res://src/Enemies/Virus/Virus.cs" id="1_30ajp"]
+[ext_resource type="Texture2D" uid="uid://j7754s3ldqen" path="res://assets/virus.png" id="2_n72sf"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2cpgo"]
+atlas = ExtResource("2_n72sf")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cx7eb"]
+atlas = ExtResource("2_n72sf")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_auc2b"]
+atlas = ExtResource("2_n72sf")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0x6iw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2cpgo")
+}],
+"loop": true,
+"name": &"damage",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cx7eb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_auc2b")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_inc6b"]
+radius = 13.0
+
+[node name="Virus" type="Area2D"]
+script = ExtResource("1_30ajp")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_0x6iw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_inc6b")

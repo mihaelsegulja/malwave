@@ -10,20 +10,25 @@ public partial class Bullet : Area2D
 	{
 		Position += Direction * (float)delta * Speed;
 	}
-
-	private void _on_body_entered(Node2D body)
-	{
-		QueueFree();
-	}
 	
 	public override void _Ready()
 	{
 		var sprite = GetNode<Sprite2D>("Sprite2D");
-
+		Connect("body_entered", new Callable(this, nameof(_on_body_entered)));
+		
 		// assuming all frames are 32x32
 		int index = GD.RandRange(0, 3);
 		sprite.RegionEnabled = true;
 		sprite.RegionRect = new Rect2(index * 32, 0, 32, 32);
+	}
+	
+	private void _on_body_entered(Node body)
+	{
+		if (body is Virus virus)
+		{
+			virus.TakeDamage();
+			QueueFree(); // remove bullet
+		}
 	}
 
 }
