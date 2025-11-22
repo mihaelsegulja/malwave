@@ -9,6 +9,7 @@ public partial class Player : CharacterBody2D
 	
 	private Sprite2D _aimArrow;
 	private AnimatedSprite2D _anim;
+	private bool _isHurt = false;
 	
 	public override void _Ready()
 	{
@@ -31,24 +32,29 @@ public partial class Player : CharacterBody2D
 		if (Input.IsActionPressed("ui_left")) direction.X -= 1;
 		if (Input.IsActionPressed("ui_down")) direction.Y += 1;
 		if (Input.IsActionPressed("ui_up")) direction.Y -= 1;
-		
+
 		if (direction.X < 0)
 			_anim.FlipH = true;
 		else if (direction.X > 0)
 			_anim.FlipH = false;
-		
+
+		if (_isHurt)
+		{
+			MoveAndSlide(); // still allow movement
+			return;
+		}
 		if (direction != Vector2.Zero)
 		{
 			direction = direction.Normalized();
-			Position += direction * Speed * (float)delta;
+			Velocity = direction * Speed;
 			_anim.Play("default");
 		}
 		else
 		{
+			Velocity = Vector2.Zero;
 			_anim.Play("idle");
 		}
-		
-		Velocity = direction.Normalized() * Speed;
+
 		MoveAndSlide();
 	}
 
@@ -85,20 +91,26 @@ public partial class Player : CharacterBody2D
 	
 	public void TakeDamage()
 	{
+		GD.Print("player damaged");
 		Health--;
+
+		_isHurt = true;
 		_anim.Play("damage");
 
-		GetTree().CreateTimer(0.2).Timeout += () => _anim.Play("default");
+		GetTree().CreateTimer(0.3).Timeout += () =>
+		{
+			_isHurt = false;
+			_anim.Play("default");
+		};
 
 		if (Health <= 0)
 			Die();
 	}
 
-	private void Die()
+	public void Die()
 	{
 		GD.Print("Player died!");
-		SetProcess(false);
-		SetPhysicsProcess(false);
-		//QueueFree();
+		//EmitSignal("player_died");
+		QueueFree();
 	}
 }

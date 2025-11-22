@@ -1,0 +1,54 @@
+[gd_scene load_steps=9 format=3 uid="uid://br0ar7pr3ikw4"]
+
+[ext_resource type="Script" uid="uid://by6uf2t5jy7sx" path="res://src/Enemies/Trojan/Trojan.cs" id="1_c0l2n"]
+[ext_resource type="Texture2D" uid="uid://dagblhgimewp6" path="res://assets/trojan.png" id="1_geglv"]
+[ext_resource type="PackedScene" uid="uid://dn6yiokci5vt7" path="res://src/Enemies/Virus/Virus.tscn" id="2_6t3ne"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c0l2n"]
+atlas = ExtResource("1_geglv")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6t3ne"]
+atlas = ExtResource("1_geglv")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5cm7m"]
+atlas = ExtResource("1_geglv")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_iecph"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c0l2n")
+}],
+"loop": true,
+"name": &"damage",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6t3ne")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5cm7m")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_geglv"]
+radius = 18.0278
+
+[node name="Trojan" type="CharacterBody2D"]
+script = ExtResource("1_c0l2n")
+VirusScene = ExtResource("2_6t3ne")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_iecph")
+frame = 1
+frame_progress = 0.0788748
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_geglv")

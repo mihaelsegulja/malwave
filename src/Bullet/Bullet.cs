@@ -24,10 +24,10 @@ public partial class Bullet : Area2D
 	
 	private void _on_body_entered(Node body)
 	{
-		if (body is Virus virus)
+		if (body is Enemy enemy)
 		{
-			virus.TakeDamage();
-			QueueFree(); // remove bullet
+			enemy.TakeDamage();
+			QueueFree();
 		}
 	}
 
