@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmxskedqoa3wb"]
+
+[ext_resource type="Script" uid="uid://cgr6cerug2poa" path="res://src/UI/HealthBar.cs" id="1_o7amq"]
+
+[node name="HealthBar" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_o7amq")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 4.0
+color = Color(0.866667, 0, 0.372549, 1)
+
+[node name="Fill" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 4.0
+color = Color(0.0941176, 1, 0.941176, 1)

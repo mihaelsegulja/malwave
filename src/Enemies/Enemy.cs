@@ -5,9 +5,11 @@ public partial class Enemy : CharacterBody2D
 {
 	[Export] public float Speed = 100f;
 	[Export] public float AttackCooldown = 1f;
-
-	[Export] public int MaxHealth = 3;     // default, override in children
+	[Export] public int MaxHealth = 3;
 	protected int Health;
+	private HealthBar _healthBar;
+	[Export] public PackedScene HealthBarScene;
+	[Signal] public delegate void DiedEventHandler();
 
 	protected Node2D Player;
 	protected AnimatedSprite2D Anim;
@@ -17,8 +19,17 @@ public partial class Enemy : CharacterBody2D
 	{
 		Player = GetTree().CurrentScene.GetNode<Node2D>("Player");
 		Anim = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-		Anim.Play("default");
+		if (HealthBarScene == null)
+			HealthBarScene = GD.Load<PackedScene>("res://src/UI/HealthBar.tscn");
+		_healthBar = (HealthBar)HealthBarScene.Instantiate();
+		AddChild(_healthBar);
+		_healthBar.Position = new Vector2(-15, 20);
 		Health = MaxHealth;
+		_healthBar.SetMaxHealth(MaxHealth);
+		_healthBar.SetHealth(Health);
+
+		Anim.Play("default");
+		Scale = new Vector2(1.25f, 1.25f);
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -69,6 +80,7 @@ public partial class Enemy : CharacterBody2D
 	public virtual void TakeDamage()
 	{
 		Health--;
+		_healthBar.SetHealth(Health);
 
 		Anim.Play("damage");
 
@@ -83,6 +95,7 @@ public partial class Enemy : CharacterBody2D
 
 	protected virtual void Die()
 	{
+		EmitSignal(SignalName.Died);
 		QueueFree();
 	}
 }

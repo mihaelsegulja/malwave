@@ -3,7 +3,7 @@ using System;
 
 public partial class Trojan : Enemy
 {
-	[Export] public PackedScene VirusScene;   // assign in inspector
+	[Export] public PackedScene VirusScene;
 
 	public override void _Ready()
 	{
@@ -13,8 +13,8 @@ public partial class Trojan : Enemy
 
 	protected override void Die()
 	{
-		SpawnViruses();
-		QueueFree();
+		CallDeferred(nameof(SpawnViruses));
+		base.Die();
 	}
 
 	private void SpawnViruses()
@@ -25,8 +25,7 @@ public partial class Trojan : Enemy
 		{
 			var virus = (Virus)VirusScene.Instantiate();
 			virus.Position = GlobalPosition + new Vector2(GD.Randf() * 16 - 8, GD.Randf() * 16 - 8);
-
-			GetTree().CurrentScene.AddChild(virus);
+			GetParent().AddChild(virus);
 		}
 	}
 }
