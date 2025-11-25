@@ -17,17 +17,7 @@ public partial class WaveManager : Node
 	public override void _Ready()
 	{
 		_player = GetTree().CurrentScene.GetNode<Player>("Player");
-		ChildEnteredTree += OnChildAdded;
 		StartNextWave();
-	}
-	
-	private void OnChildAdded(Node n)
-	{
-		if (n is Enemy e)
-		{
-			e.Died += OnEnemyDied;
-			_aliveEnemies++;
-		}
 	}
 
 	private struct WaveInfo
@@ -50,7 +40,7 @@ public partial class WaveManager : Node
 	{
 		if (_player != null)
 		{
-			_player.FireRate = Mathf.Max(0.05f, _player.FireRate * 0.92f);
+			_player.FireRate = Mathf.Max(0.05f, _player.FireRate * 0.95f);
 			GD.Print("New fire rate:", _player.FireRate);
 		}
 
@@ -59,6 +49,7 @@ public partial class WaveManager : Node
 		SpawnEnemies(info);
 		
 		_currentWave++;
+		GD.Print("Wave: " + _currentWave);
 	}
 
 	private void SpawnEnemies(WaveInfo info)
@@ -78,6 +69,13 @@ public partial class WaveManager : Node
 			enemy.Position = sp.Position;
 
 			AddChild(enemy);
+			
+			if (enemy is Enemy e)
+			{
+				e.Died += OnEnemyDied;
+				if (e.CountsForWave)
+					_aliveEnemies++;
+			}
 		}
 	}
 	

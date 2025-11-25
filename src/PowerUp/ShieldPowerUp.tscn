@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://5hcaatsw8d2x"]
+
+[ext_resource type="Script" uid="uid://nwma18tcgq3a" path="res://src/PowerUp/ShieldPowerUp.cs" id="1_goj3k"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4iwhq"]
+
+[sub_resource type="Gradient" id="Gradient_wg052"]
+colors = PackedColorArray(0, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_plack"]
+gradient = SubResource("Gradient_wg052")
+fill_from = Vector2(0.527523, 1)
+fill_to = Vector2(0.518349, 0)
+
+[node name="ShieldPowerUp" type="Area2D"]
+script = ExtResource("1_goj3k")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_4iwhq")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-3.27826e-07, -2.08616e-07)
+scale = Vector2(0.21875, 0.21875)
+texture = SubResource("GradientTexture2D_plack")

@@ -19,12 +19,13 @@ public partial class Trojan : Enemy
 
 	private void SpawnViruses()
 	{
-		int count = GD.RandRange(1, 2);  // spawns 1 or 2
+		int count = GD.RandRange(1, 2);
 
 		for (int i = 0; i < count; i++)
 		{
 			var virus = (Virus)VirusScene.Instantiate();
 			virus.Position = GlobalPosition + new Vector2(GD.Randf() * 16 - 8, GD.Randf() * 16 - 8);
+			virus.CountsForWave = false;
 			GetParent().AddChild(virus);
 		}
 	}

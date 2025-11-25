@@ -6,18 +6,21 @@ public partial class Enemy : CharacterBody2D
 	[Export] public float Speed = 100f;
 	[Export] public float AttackCooldown = 1f;
 	[Export] public int MaxHealth = 3;
-	protected int Health;
-	private HealthBar _healthBar;
 	[Export] public PackedScene HealthBarScene;
+	[Export] public PackedScene[] DropTable;
+	[Export] public float DropChance = 0.2f;
 	[Signal] public delegate void DiedEventHandler();
-
+	public bool CountsForWave = true;
+	
 	protected Node2D Player;
 	protected AnimatedSprite2D Anim;
 	protected bool CanAttack = true;
+	protected int Health;
+	private HealthBar _healthBar;
 
 	public override void _Ready()
 	{
-		Player = GetTree().CurrentScene.GetNode<Node2D>("Player");
+		Player = GetTree().Root.FindChild("Player", true, false) as Node2D;
 		Anim = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		if (HealthBarScene == null)
 			HealthBarScene = GD.Load<PackedScene>("res://src/UI/HealthBar.tscn");
@@ -95,7 +98,13 @@ public partial class Enemy : CharacterBody2D
 
 	protected virtual void Die()
 	{
+		if (GD.Randf() < DropChance && DropTable.Length > 0)
+		{
+			var scene = DropTable[GD.Randi() % DropTable.Length].Instantiate<Node2D>();
+			scene.Position = Position;
+			GetTree().CurrentScene.CallDeferred("add_child", scene);
+		}
 		EmitSignal(SignalName.Died);
-		QueueFree();
+		CallDeferred("queue_free");
 	}
 }

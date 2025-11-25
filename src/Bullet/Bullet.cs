@@ -29,5 +29,4 @@ public partial class Bullet : Area2D
 			QueueFree();
 		}
 	}
-
 }

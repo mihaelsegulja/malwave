@@ -8,17 +8,14 @@ public partial class HealthBar : Control
 
 	private ColorRect _fill;
 	private ColorRect _background;
-	private float _fullWidth;
 
 	public override void _Ready()
 	{
 		_background = GetNode<ColorRect>("Background");
 		_fill = GetNode<ColorRect>("Fill");
 
-		_fullWidth = _background.Size.X;
-
-		_fill.Visible = true;
-		_background.Visible = true;
+		MaxHealth = Mathf.Max(MaxHealth, 1);
+		CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
 
 		UpdateGraphics();
 	}
@@ -29,25 +26,28 @@ public partial class HealthBar : Control
 		UpdateGraphics();
 	}
 
-	public void SetMaxHealth(int value)
+	public void SetMaxHealth(int value, bool adjustCurrent = false)
 	{
-		MaxHealth = value;
-		if (CurrentHealth == 0)
+		MaxHealth = Mathf.Max(1, value);
+
+		if (adjustCurrent)
 		{
 			CurrentHealth = MaxHealth;
 		}
-		CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+		else
+		{
+			CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+		}
+
 		UpdateGraphics();
 	}
 
 	private void UpdateGraphics()
 	{
-		if (MaxHealth <= 0) return;
+		if (_background == null || _fill == null) return;
 
 		float percent = (float)CurrentHealth / MaxHealth;
-
-		// Set width proportional to health
-		_fill.Size = new Vector2(_fullWidth * percent, _background.Size.Y);
-		_fill.Position = new Vector2(0, 0);
+		_fill.Size = new Vector2(_background.Size.X * percent, _background.Size.Y);
+		_fill.Position = Vector2.Zero;
 	}
 }

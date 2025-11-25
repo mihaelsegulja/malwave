@@ -1,8 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://br0ar7pr3ikw4"]
+[gd_scene load_steps=12 format=3 uid="uid://br0ar7pr3ikw4"]
 
 [ext_resource type="Script" uid="uid://by6uf2t5jy7sx" path="res://src/Enemies/Trojan/Trojan.cs" id="1_c0l2n"]
 [ext_resource type="Texture2D" uid="uid://dagblhgimewp6" path="res://assets/trojan.png" id="1_geglv"]
 [ext_resource type="PackedScene" uid="uid://dn6yiokci5vt7" path="res://src/Enemies/Virus/Virus.tscn" id="2_6t3ne"]
+[ext_resource type="PackedScene" uid="uid://c3a8mx0iv3gn3" path="res://src/PowerUp/MaxHealthPowerUp.tscn" id="3_a3ync"]
+[ext_resource type="PackedScene" uid="uid://cyq6rwbsfgw5" path="res://src/PowerUp/HealPowerUp.tscn" id="4_r0shj"]
+[ext_resource type="PackedScene" uid="uid://5hcaatsw8d2x" path="res://src/PowerUp/ShieldPowerUp.tscn" id="5_5y1q1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c0l2n"]
 atlas = ExtResource("1_geglv")
@@ -44,6 +47,8 @@ radius = 18.0278
 [node name="Trojan" type="CharacterBody2D"]
 script = ExtResource("1_c0l2n")
 VirusScene = ExtResource("2_6t3ne")
+DropTable = Array[PackedScene]([ExtResource("3_a3ync"), ExtResource("4_r0shj"), ExtResource("5_5y1q1")])
+DropChance = 0.4
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_iecph")

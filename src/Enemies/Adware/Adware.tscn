@@ -1,7 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://dfvw7fbstur3s"]
+[gd_scene load_steps=12 format=3 uid="uid://dfvw7fbstur3s"]
 
 [ext_resource type="Script" uid="uid://bnekdq364u8uu" path="res://src/Enemies/Adware/Adware.cs" id="1_gxel6"]
 [ext_resource type="Texture2D" uid="uid://cm8v1h71julib" path="res://assets/adware.png" id="1_uj41t"]
+[ext_resource type="PackedScene" uid="uid://c3a8mx0iv3gn3" path="res://src/PowerUp/MaxHealthPowerUp.tscn" id="2_b23ws"]
+[ext_resource type="PackedScene" uid="uid://cyq6rwbsfgw5" path="res://src/PowerUp/HealPowerUp.tscn" id="3_h4jqc"]
+[ext_resource type="PackedScene" uid="uid://5hcaatsw8d2x" path="res://src/PowerUp/ShieldPowerUp.tscn" id="4_xncfp"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gxel6"]
 size = Vector2(32, 30)
@@ -52,6 +55,8 @@ animations = [{
 
 [node name="Adware" type="CharacterBody2D"]
 script = ExtResource("1_gxel6")
+DropTable = Array[PackedScene]([ExtResource("2_b23ws"), ExtResource("3_h4jqc"), ExtResource("4_xncfp")])
+DropChance = 0.5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_gxel6")

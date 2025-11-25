@@ -11,12 +11,16 @@ public partial class Player : CharacterBody2D
 	[Export] public PackedScene BulletScene;
 	[Export] public PackedScene HealthBarScene;
 	
+	public bool ShieldActive = false;
+	public int Health;
+	
 	private Sprite2D _aimArrow;
 	private AnimatedSprite2D _anim;
 	private bool _isHurt = false;
 	private float _shootCooldown = 0f;
 	private HealthBar _healthBar;
-	protected int Health;
+	private float shieldTimer = 0.0f;
+	private Polygon2D _shieldVisual;
 
 	public override void _Ready()
 	{
@@ -30,6 +34,8 @@ public partial class Player : CharacterBody2D
 		Health = MaxHealth;
 		_healthBar.SetMaxHealth(MaxHealth);
 		_healthBar.SetHealth(Health);
+		_shieldVisual = GetNode<Polygon2D>("Shield");
+		_shieldVisual.Visible = false;
 
 		Scale = new Vector2(1.25f, 1.25f);
 	}
@@ -44,6 +50,16 @@ public partial class Player : CharacterBody2D
 	{
 		HandleAiming();
 		HandleShooting((float)delta);
+		
+		if (ShieldActive)
+		{
+			shieldTimer -= (float)delta;
+			if (shieldTimer <= 0)
+			{
+				ShieldActive = false;
+				_shieldVisual.Visible = false;
+			}
+		}
 	}
 
 	private void HandleMovement(float delta)
@@ -149,6 +165,8 @@ public partial class Player : CharacterBody2D
 
 	public void TakeDamage()
 	{
+		if (ShieldActive) return;
+		
 		GD.Print("player damaged");
 		Health--;
 		_healthBar.SetHealth(Health);
@@ -169,5 +187,28 @@ public partial class Player : CharacterBody2D
 	{
 		GD.Print("Player died!");
 		QueueFree();
+	}
+	
+	public void ActivateShield(float duration)
+	{
+		_shieldVisual.Visible = true;
+		ShieldActive = true;
+		shieldTimer = duration;
+	}
+	
+	public void UpdateHealth(int amount, int? newMax = null)
+	{
+		if (newMax.HasValue)
+		{
+			MaxHealth += newMax.Value;
+			Health = Mathf.Min(Health, MaxHealth);
+			_healthBar.SetMaxHealth(MaxHealth, adjustCurrent: false);
+		}
+
+		Health = Mathf.Clamp(Health + amount, 0, MaxHealth);
+		_healthBar.SetHealth(Health);
+		
+		GD.Print("Health: " + Health);
+		GD.Print("MaxHealth: " + MaxHealth);
 	}
 }
