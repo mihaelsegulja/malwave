@@ -1,110 +1,145 @@
 using Godot;
-using System;
 
 public partial class Enemy : CharacterBody2D
 {
-	[Export] public float Speed = 100f;
-	[Export] public float AttackCooldown = 1f;
-	[Export] public int MaxHealth = 3;
-	[Export] public PackedScene HealthBarScene;
-	[Export] public PackedScene[] DropTable;
-	[Export] public float DropChance = 0.2f;
-	[Signal] public delegate void DiedEventHandler();
-	public bool CountsForWave = true;
-	
-	protected Node2D Player;
-	protected AnimatedSprite2D Anim;
-	protected bool CanAttack = true;
-	protected int Health;
-	private HealthBar _healthBar;
+  [Export] public float Speed = 100f;
+  [Export] public float AttackCooldown = 1f;
+  [Export] public int MaxHealth = 3;
+  [Export] public PackedScene HealthBarScene;
+  [Export] public PackedScene[] DropTable;
+  [Export] public float DropChance = 0.2f;
+  [Signal] public delegate void DiedEventHandler(Enemy e);
+  public bool CountsForWave = true;
 
-	public override void _Ready()
-	{
-		Player = GetTree().Root.FindChild("Player", true, false) as Node2D;
-		Anim = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-		if (HealthBarScene == null)
-			HealthBarScene = GD.Load<PackedScene>("res://src/UI/HealthBar.tscn");
-		_healthBar = (HealthBar)HealthBarScene.Instantiate();
-		AddChild(_healthBar);
-		_healthBar.Position = new Vector2(-15, 20);
-		Health = MaxHealth;
-		_healthBar.SetMaxHealth(MaxHealth);
-		_healthBar.SetHealth(Health);
+  protected Node2D Player;
+  protected AnimatedSprite2D Anim;
+  protected bool CanAttack = true;
+  protected int Health;
+  private HealthBar _healthBar;
+  private static CircleShape2D _separationShape = new CircleShape2D { Radius = 16f };
+  private PhysicsDirectSpaceState2D _space;
 
-		Anim.Play("default");
-		Scale = new Vector2(1.25f, 1.25f);
-	}
+  public override void _Ready()
+  {
+    _space = GetWorld2D().DirectSpaceState;
+    Player = GetTree().Root.FindChild("Player", true, false) as Node2D;
+    Anim = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+    HealthBarScene ??= GD.Load<PackedScene>("res://src/UI/HealthBar/HealthBar.tscn");
+    _healthBar = (HealthBar)HealthBarScene.Instantiate();
+    AddChild(_healthBar);
+    _healthBar.Position = new Vector2(-15, 20);
+    Health = MaxHealth;
+    _healthBar.SetMaxHealth(MaxHealth);
+    _healthBar.SetHealth(Health);
 
-	public override void _PhysicsProcess(double delta)
-	{
-		if (!IsInstanceValid(Player))
-			return;
+    Anim.Play("default");
+    Scale = new Vector2(1.25f, 1.25f);
+  }
 
-		ChasePlayer();
-		HandleCollisions();
-	}
+  public override void _PhysicsProcess(double delta)
+  {
+    if (!IsInstanceValid(Player))
+      return;
 
-	protected virtual void ChasePlayer()
-	{
-		Vector2 direction = (Player.GlobalPosition - GlobalPosition).Normalized();
-		
-		if (direction.X < 0)
-			Anim.FlipH = true;
-		else if (direction.X > 0)
-			Anim.FlipH = false;
-		
-		Velocity = direction * Speed;
-		MoveAndSlide();
-	}
+    ChasePlayer();
+    HandleCollisions();
+  }
 
-	private void HandleCollisions()
-	{
-		for (int i = 0; i < GetSlideCollisionCount(); i++)
-		{
-			var collision = GetSlideCollision(i);
-			var collider = collision.GetCollider();
+  protected virtual void ChasePlayer()
+  {
+    Vector2 direction = (Player.GlobalPosition - GlobalPosition).Normalized();
+    direction += SeparationVector() * 0.8f;
+    direction = direction.Normalized();
 
-			if (collider is Player player)
-				TryDamage(player);
-		}
-	}
+    if (direction.X < 0)
+      Anim.FlipH = true;
+    else if (direction.X > 0)
+      Anim.FlipH = false;
 
-	protected virtual void TryDamage(Player player)
-	{
-		if (!CanAttack) return;
+    Velocity = direction * Speed;
+    MoveAndSlide();
+  }
 
-		player.TakeDamage();
-		CanAttack = false;
+  private void HandleCollisions()
+  {
+    for (int i = 0; i < GetSlideCollisionCount(); i++)
+    {
+      var collision = GetSlideCollision(i);
+      var collider = collision.GetCollider();
 
-		var t = GetTree().CreateTimer(AttackCooldown);
-		t.Timeout += () => CanAttack = true;
-	}
+      if (collider is Player player)
+        TryDamage(player);
+    }
+  }
 
-	public virtual void TakeDamage()
-	{
-		Health--;
-		_healthBar.SetHealth(Health);
+  protected virtual void TryDamage(Player player)
+  {
+    if (!CanAttack) return;
 
-		Anim.Play("damage");
+    player.TakeDamage();
+    CanAttack = false;
 
-		if (Health <= 0)
-		{
-			Die();
-			return;
-		}
+    var t = GetTree().CreateTimer(AttackCooldown);
+    t.Timeout += () => CanAttack = true;
+  }
 
-		GetTree().CreateTimer(0.2).Timeout += () => Anim.Play("default");
-	}
+  public virtual void TakeDamage()
+  {
+    Health--;
+    _healthBar.SetHealth(Health);
 
-	protected virtual void Die()
-	{
-		if (GD.Randf() < DropChance && DropTable.Length > 0)
-		{
-			var scene = DropTable[GD.Randi() % DropTable.Length].Instantiate<Node2D>();
-			scene.Position = Position;
-			GetTree().CurrentScene.CallDeferred("add_child", scene);
-		}
-		EmitSignal(SignalName.Died);
-		CallDeferred("queue_free");
-	}
+    Anim.Play("damage");
+
+    if (Health <= 0)
+    {
+      Die();
+      return;
+    }
+
+    GetTree().CreateTimer(0.2).Timeout += () => Anim.Play("default");
+  }
+
+  protected virtual void Die()
+  {
+    if (DropTable != null && DropTable.Length > 0 && GD.Randf() < DropChance)
+    {
+      var scene = DropTable[GD.Randi() % DropTable.Length].Instantiate<Node2D>();
+      scene.Position = Position;
+      GetTree().CurrentScene.CallDeferred("add_child", scene);
+    }
+
+    EmitSignal(SignalName.Died, this);
+
+    CallDeferred("queue_free");
+  }
+
+  private Vector2 SeparationVector()
+  {
+    var space = _space;
+
+    PhysicsShapeQueryParameters2D p = new()
+    {
+      Transform = new Transform2D(0, GlobalPosition),
+      CollisionMask = 1 << 3
+    };
+
+    p.SetShape(_separationShape);
+
+    var hits = space.IntersectShape(p);
+
+    Vector2 repulsion = Vector2.Zero;
+
+    foreach (var hit in hits)
+    {
+      var colliderVariant = hit["collider"];
+      Node colliderNode = colliderVariant.As<Node>();
+
+      if (colliderNode is Enemy other && other != this)
+      {
+        repulsion += (GlobalPosition - other.GlobalPosition).Normalized();
+      }
+    }
+
+    return repulsion;
+  }
 }

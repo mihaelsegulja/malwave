@@ -48,7 +48,7 @@ collision_layer = 2
 collision_mask = 9
 script = ExtResource("1_30ajp")
 DropTable = Array[PackedScene]([ExtResource("2_cx7eb"), ExtResource("3_auc2b"), ExtResource("4_0x6iw")])
-DropChance = 0.3
+DropChance = 0.25
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_0x6iw")

@@ -1,11 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://g5var76f6thx"]
+[gd_scene load_steps=9 format=3 uid="uid://g5var76f6thx"]
 
 [ext_resource type="PackedScene" uid="uid://d1gjsh32ypovg" path="res://src/Player/Player.tscn" id="1_elqb8"]
-[ext_resource type="PackedScene" uid="uid://cknth1yj31d8e" path="res://scenes/Arena.tscn" id="1_rvslj"]
+[ext_resource type="PackedScene" uid="uid://cknth1yj31d8e" path="res://src/Scenes/Arena.tscn" id="1_rvslj"]
 [ext_resource type="PackedScene" uid="uid://dn6yiokci5vt7" path="res://src/Enemies/Virus/Virus.tscn" id="3_0bbpv"]
 [ext_resource type="PackedScene" uid="uid://br0ar7pr3ikw4" path="res://src/Enemies/Trojan/Trojan.tscn" id="4_rarhs"]
 [ext_resource type="PackedScene" uid="uid://dfvw7fbstur3s" path="res://src/Enemies/Adware/Adware.tscn" id="5_vcsgt"]
-[ext_resource type="Script" uid="uid://dc6l3m3s8n08h" path="res://scripts/WaveManager.cs" id="6_c01mt"]
+[ext_resource type="Script" uid="uid://dc6l3m3s8n08h" path="res://src/Managers/WaveManager.cs" id="6_c01mt"]
+[ext_resource type="PackedScene" uid="uid://dbnwy7c70pd8n" path="res://src/UI/WaveUI/WaveUI.tscn" id="7_d85jq"]
 
 [sub_resource type="Environment" id="Environment_vcsgt"]
 background_mode = 3
@@ -38,6 +39,7 @@ VirusScene = ExtResource("3_0bbpv")
 TrojanScene = ExtResource("4_rarhs")
 AdwareScene = ExtResource("5_vcsgt")
 SpawnPoints = [NodePath("../SpawnPoints/Marker2D"), NodePath("../SpawnPoints/Marker2D2"), NodePath("../SpawnPoints/Marker2D3"), NodePath("../SpawnPoints/Marker2D4"), NodePath("../SpawnPoints/Marker2D6"), NodePath("../SpawnPoints/Marker2D7")]
+WaveUIScene = ExtResource("7_d85jq")
 
 [node name="SpawnPoints" type="Node2D" parent="."]
 position = Vector2(0, -1)

@@ -48,7 +48,7 @@ radius = 18.0278
 script = ExtResource("1_c0l2n")
 VirusScene = ExtResource("2_6t3ne")
 DropTable = Array[PackedScene]([ExtResource("3_a3ync"), ExtResource("4_r0shj"), ExtResource("5_5y1q1")])
-DropChance = 0.4
+DropChance = 0.325
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_iecph")

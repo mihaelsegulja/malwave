@@ -1,11 +1,11 @@
 [gd_scene load_steps=2 format=3 uid="uid://dmxskedqoa3wb"]
 
-[ext_resource type="Script" uid="uid://cgr6cerug2poa" path="res://src/UI/HealthBar.cs" id="1_o7amq"]
+[ext_resource type="Script" uid="uid://cgr6cerug2poa" path="res://src/UI/HealthBar/HealthBar.cs" id="1_g7n61"]
 
 [node name="HealthBar" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-script = ExtResource("1_o7amq")
+script = ExtResource("1_g7n61")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 0
