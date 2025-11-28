@@ -1,9 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://d1gjsh32ypovg"]
+[gd_scene load_steps=14 format=3 uid="uid://d1gjsh32ypovg"]
 
 [ext_resource type="Script" uid="uid://bveiphwslnyyy" path="res://src/Player/Player.cs" id="1_rwoh2"]
 [ext_resource type="Texture2D" uid="uid://cg5cnx4ma3dme" path="res://assets/player-admin.png" id="1_tehm3"]
 [ext_resource type="PackedScene" uid="uid://q0egflklujof" path="res://src/Bullet/Bullet.tscn" id="2_vy1tf"]
 [ext_resource type="Texture2D" uid="uid://dcxwqs1bkmcac" path="res://assets/arrow.png" id="4_4pjjn"]
+[ext_resource type="AudioStream" uid="uid://3u3aq82vd0p4" path="res://assets/synth_laser_03.ogg" id="5_dd31a"]
+[ext_resource type="AudioStream" uid="uid://upplit3d78ux" path="res://assets/retro_coin_01.ogg" id="7_31ddy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pbc7v"]
 size = Vector2(30, 34)
@@ -93,3 +95,13 @@ texture = ExtResource("4_4pjjn")
 color = Color(0, 1, 1, 0.270588)
 polygon = PackedVector2Array(7.62939e-06, -16, -16, -16, -16, 8, -7.62939e-06, 16, 16, 8, 16, -16)
 uv = PackedVector2Array(-185, -37, -233, -14, -233, 44, -190, 64, -141, 42, -139, -9.00002)
+
+[node name="BulletSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_dd31a")
+volume_db = -4.685
+bus = &"SFX"
+
+[node name="PowerUpSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_31ddy")
+volume_db = 0.937
+bus = &"SFX"

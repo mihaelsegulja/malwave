@@ -10,43 +10,43 @@ public partial class HealthBar : Control
 
   public override void _Ready()
   {
-    _background = GetNode<ColorRect>("Background");
-    _fill = GetNode<ColorRect>("Fill");
+	_background = GetNode<ColorRect>("Background");
+	_fill = GetNode<ColorRect>("Fill");
 
-    MaxHealth = Mathf.Max(MaxHealth, 1);
-    CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+	MaxHealth = Mathf.Max(MaxHealth, 1);
+	CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
 
-    UpdateGraphics();
+	UpdateGraphics();
   }
 
   public void SetHealth(int value)
   {
-    CurrentHealth = Mathf.Clamp(value, 0, MaxHealth);
-    UpdateGraphics();
+	CurrentHealth = Mathf.Clamp(value, 0, MaxHealth);
+	UpdateGraphics();
   }
 
   public void SetMaxHealth(int value, bool adjustCurrent = false)
   {
-    MaxHealth = Mathf.Max(1, value);
+	MaxHealth = Mathf.Max(1, value);
 
-    if (adjustCurrent)
-    {
-      CurrentHealth = MaxHealth;
-    }
-    else
-    {
-      CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
-    }
+	if (adjustCurrent)
+	{
+	  CurrentHealth = MaxHealth;
+	}
+	else
+	{
+	  CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+	}
 
-    UpdateGraphics();
+	UpdateGraphics();
   }
 
   private void UpdateGraphics()
   {
-    if (_background == null || _fill == null) return;
+	if (_background == null || _fill == null) return;
 
-    float percent = (float)CurrentHealth / MaxHealth;
-    _fill.Size = new Vector2(_background.Size.X * percent, _background.Size.Y);
-    _fill.Position = Vector2.Zero;
+	float percent = (float)CurrentHealth / MaxHealth;
+	_fill.Size = new Vector2(_background.Size.X * percent, _background.Size.Y);
+	_fill.Position = Vector2.Zero;
   }
 }

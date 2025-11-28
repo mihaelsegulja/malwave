@@ -7,39 +7,42 @@ public partial class GameOverUI : CanvasLayer
   private Label _powerUpsCollectedLabel;
   private Button _restartButton;
   private Button _quitButton;
+  private AudioStreamPlayer _gameOverSFX;
 
   public override void _Ready()
   {
-    ProcessMode = Node.ProcessModeEnum.Always;
-    var vBox = GetNode<VBoxContainer>("Control/CenterContainer/VBoxContainer");
-    _waveReachedLabel = vBox.GetNode<Label>("WaveReached");
-    _enemiesKilledLabel = vBox.GetNode<Label>("EnemiesKilled");
-    _powerUpsCollectedLabel = vBox.GetNode<Label>("PowerUpsCollected");
-    _restartButton = vBox.GetNode<Button>("Restart");
-    _quitButton = vBox.GetNode<Button>("Quit");
+	ProcessMode = Node.ProcessModeEnum.Always;
+	var vBox = GetNode<VBoxContainer>("Control/CenterContainer/VBoxContainer");
+	_waveReachedLabel = vBox.GetNode<Label>("WaveReached");
+	_enemiesKilledLabel = vBox.GetNode<Label>("EnemiesKilled");
+	_powerUpsCollectedLabel = vBox.GetNode<Label>("PowerUpsCollected");
+	_restartButton = vBox.GetNode<Button>("Restart");
+	_quitButton = vBox.GetNode<Button>("Quit");
+	_gameOverSFX = GetNodeOrNull<AudioStreamPlayer>("GameOverSFX");
 
-    _restartButton.Pressed += OnRestart;
-    _quitButton.Pressed += OnQuit;
+	_restartButton.Pressed += OnRestart;
+	_quitButton.Pressed += OnQuit;
   }
 
   public void ShowGameOver(int waveReached, int enemiesKilled, int powerUpsCollected)
   {
-    _waveReachedLabel.Text = $"Wave reached: {waveReached}";
-    _enemiesKilledLabel.Text = $"Malware killed: {enemiesKilled}";
-    _powerUpsCollectedLabel.Text = $"PowerUps collected: {powerUpsCollected}";
+	_gameOverSFX?.Play();
+	_waveReachedLabel.Text = $"Wave reached: {waveReached}";
+	_enemiesKilledLabel.Text = $"Malware killed: {enemiesKilled}";
+	_powerUpsCollectedLabel.Text = $"PowerUps collected: {powerUpsCollected}";
 
-    GetTree().Paused = true;
+	GetTree().Paused = true;
   }
 
   private void OnRestart()
   {
-    GetTree().Paused = false;
-    QueueFree();
-    GetTree().ChangeSceneToFile("res://src/Scenes/Main.tscn");
+	GetTree().Paused = false;
+	QueueFree();
+	GetTree().ChangeSceneToFile("res://src/Scenes/Main.tscn");
   }
 
   private void OnQuit()
   {
-    GetTree().Quit();
+	GetTree().Quit();
   }
 }

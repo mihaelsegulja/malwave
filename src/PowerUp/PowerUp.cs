@@ -6,14 +6,14 @@ public abstract partial class PowerUp : Area2D
 
   public override void _Ready()
   {
-    BodyEntered += body =>
-    {
-      if (body is Player p)
-      {
-        Apply(p);
-        p.ReportPowerUpCollection();
-        QueueFree();
-      }
-    };
+	BodyEntered += body =>
+	{
+	  if (body is Player p)
+	  {
+		Apply(p);
+		p.ReportPowerUpCollection();
+		QueueFree();
+	  }
+	};
   }
 }

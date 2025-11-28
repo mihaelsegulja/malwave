@@ -6,7 +6,7 @@ public partial class Trojan : Enemy
 
   public override void _Ready()
   {
-    MaxHealth = 5;
-    base._Ready();
+	MaxHealth = 5;
+	base._Ready();
   }
 }

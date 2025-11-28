@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://brev1kr81rndi"]
+[gd_scene load_steps=3 format=3 uid="uid://brev1kr81rndi"]
 
 [ext_resource type="Script" uid="uid://c4ftrm5hbw1mx" path="res://src/UI/GameOverUI/GameOverUI.cs" id="1_xanhu"]
+[ext_resource type="AudioStream" uid="uid://ruwukuq6xyb" path="res://assets/Game over jingle.ogg" id="2_6osg3"]
 
 [node name="GameOverUi" type="CanvasLayer"]
 script = ExtResource("1_xanhu")
@@ -60,3 +61,7 @@ text = "Restart"
 [node name="Quit" type="Button" parent="Control/CenterContainer/VBoxContainer"]
 layout_mode = 2
 text = "Quit"
+
+[node name="GameOverSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_6osg3")
+bus = &"SFX"

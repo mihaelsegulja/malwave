@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=4 uid="uid://cknth1yj31d8e"]
+[gd_scene load_steps=3 format=4 uid="uid://cknth1yj31d8e"]
 
 [ext_resource type="TileSet" uid="uid://dxnu5g4813xje" path="res://assets/arena_tileset.tres" id="1_5ftpa"]
+[ext_resource type="Script" uid="uid://4x0c2imnmu10" path="res://src/Managers/ArenaManager.cs" id="1_y77rj"]
 
 [node name="Arena" type="Node2D"]
+script = ExtResource("1_y77rj")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 texture_filter = 1

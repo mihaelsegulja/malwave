@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://ruwukuq6xyb"
+path="res://.godot/imported/Game over jingle.ogg-48f73de67e9dcfaf2187bef7d52f19dd.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/Game over jingle.ogg"
+dest_files=["res://.godot/imported/Game over jingle.ogg-48f73de67e9dcfaf2187bef7d52f19dd.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
