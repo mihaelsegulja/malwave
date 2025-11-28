@@ -8,27 +8,30 @@ You are the system Administrator fighting off an onslaught of digital threats. S
 
 ## Features
 
-- **Wave-based progression**
+### **Wave-based progression**
 
 Each wave spawns more enemies, increasing the chaos and forcing constant movement
 
-- **Player combat**
+### **Player combat**
 
 Simple twin-stick style shooting with directional aiming and lasers
 
-- **Enemy types**
-  - Virus: basic chaser
-  - Trojan: spawns extra viruses on death
-  - Adware: does not hurt you, but annoyingly stands in way
+### **Enemy types**
 
-- **PowerUps**
-  - Heal (+2 HP)
-  - Max Health Up (+1 max HP and +1 heal)
-  - Shield (2 seconds invincibility)
+- Virus: basic chaser
+- Trojan: spawns extra viruses on death
+- Adware: does not hurt you, but annoyingly stands in way
 
-- **Dynamic tile effects**
-  - Ambient pulses: random tiles briefly light up across the arena
-  - Wave sweep: a horizontal line of tiles lights up from top to bottom at the start of each wave
+### **PowerUps**
+
+- Heal (+2 HP)
+- Max Health Up (+1 max HP and +1 heal)
+- Shield (2 seconds invincibility)
+
+### **Dynamic tile effects**
+
+- Ambient pulses: random tiles briefly light up across the arena
+- Wave sweep: a horizontal line of tiles lights up from top to bottom at the start of each wave
 
 ## Controls
 
