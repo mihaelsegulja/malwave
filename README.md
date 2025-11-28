@@ -9,9 +9,11 @@ You are the system Administrator fighting off an onslaught of digital threats. S
 ## Features
 
 - **Wave-based progression**
+
 Each wave spawns more enemies, increasing the chaos and forcing constant movement
 
 - **Player combat**
+
 Simple twin-stick style shooting with directional aiming and lasers
 
 - **Enemy types**
@@ -30,10 +32,10 @@ Simple twin-stick style shooting with directional aiming and lasers
 
 ## Controls
 
-Movement: WASD / Arrows
-Aim: Mouse
-Shoot: Left Mouse Click
-Pause: Esc
+- Movement: WASD / Arrows
+- Aim: Mouse
+- Shoot: Left Mouse Click
+- Pause: Esc
 
 ## How to Play
 
