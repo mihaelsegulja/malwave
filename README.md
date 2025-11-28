@@ -9,10 +9,10 @@ You are the system Administrator fighting off an onslaught of digital threats. S
 ## Features
 
 - **Wave-based progression**
-  Each wave spawns more enemies, increasing the chaos and forcing constant movement
+Each wave spawns more enemies, increasing the chaos and forcing constant movement
 
 - **Player combat**
-  Simple twin-stick style shooting with directional aiming and lasers
+Simple twin-stick style shooting with directional aiming and lasers
 
 - **Enemy types**
   - Virus: basic chaser
