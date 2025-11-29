@@ -1,6 +1,6 @@
 [gd_resource type="Theme" load_steps=2 format=3 uid="uid://tialbqpfkyt1"]
 
-[ext_resource type="FontFile" uid="uid://dxrb8bxgcmw76" path="res://assets/3270/3270NerdFont-Regular.ttf" id="1_5x3i2"]
+[ext_resource type="FontFile" uid="uid://c0xdfwg24xbrx" path="res://assets/3270/3270-Regular.ttf" id="1_5x3i2"]
 
 [resource]
 default_font = ExtResource("1_5x3i2")

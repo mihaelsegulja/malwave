@@ -49,7 +49,7 @@ Survive waves of malware. Collect powerups to survive. Jam to cool synthwave mus
 Made for [GitHub Game Off 2025](https://itch.io/jam/game-off-2025) game jam.
 
 - Programming/Art/Design: me
-- Font: [3270 Nerd Font](https://www.nerdfonts.com/font-downloads)
+- Font: [3270 Font](https://github.com/rbanffy/3270font)
 - SFX and Music (all CC0)
   - [50 CC0 retro / synth SFX](https://opengameart.org/content/50-cc0-retro-synth-sfx)
   - [Futility Belt](https://opengameart.org/content/futility-belt)

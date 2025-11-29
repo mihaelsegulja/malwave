@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dfvw7fbstur3s" path="res://src/Enemies/Adware/Adware.tscn" id="5_vcsgt"]
 [ext_resource type="Script" uid="uid://dc6l3m3s8n08h" path="res://src/Managers/WaveManager.cs" id="6_c01mt"]
 [ext_resource type="PackedScene" uid="uid://dbnwy7c70pd8n" path="res://src/UI/WaveUI/WaveUI.tscn" id="7_d85jq"]
-[ext_resource type="AudioStream" uid="uid://uj8vb03qglfj" path="res://assets/futilitybelt.mp3" id="8_ohpsy"]
+[ext_resource type="AudioStream" uid="uid://8wv3wus2hkuj" path="res://assets/futilitybelt.ogg" id="8_ohpsy"]
 
 [sub_resource type="Environment" id="Environment_vcsgt"]
 background_mode = 3

@@ -2,144 +2,151 @@ using Godot;
 
 public partial class Enemy : CharacterBody2D
 {
-  [Export] public float Speed = 100f;
-  [Export] public float AttackCooldown = 1f;
-  [Export] public int MaxHealth = 3;
-  [Export] public PackedScene HealthBarScene;
-  [Export] public PackedScene[] DropTable;
-  [Export] public float DropChance = 0.2f;
-  [Signal] public delegate void DiedEventHandler(Enemy e);
-  public bool CountsForWave = true;
+    [Export] public float Speed { get; set; } = 100f;
+    [Export] public float AttackCooldown { get; set; } = 1f;
+    [Export] public int MaxHealth { get; set; } = 3;
 
-  protected Node2D Player;
-  protected AnimatedSprite2D Anim;
-  protected bool CanAttack = true;
-  protected int Health;
-  private HealthBar _healthBar;
-  private static CircleShape2D _separationShape = new CircleShape2D { Radius = 16f };
-  private PhysicsDirectSpaceState2D _space;
+    [Export] public PackedScene HealthBarScene { get; set; }
+    [Export] public PackedScene[] DropTable { get; set; } = System.Array.Empty<PackedScene>();
+    [Export] public float DropChance { get; set; } = 0.2f;
 
-  public override void _Ready()
-  {
-	_space = GetWorld2D().DirectSpaceState;
-	Player = GetTree().Root.FindChild("Player", true, false) as Node2D;
-	Anim = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-	HealthBarScene ??= GD.Load<PackedScene>("res://src/UI/HealthBar/HealthBar.tscn");
-	_healthBar = (HealthBar)HealthBarScene.Instantiate();
-	AddChild(_healthBar);
-	_healthBar.Position = new Vector2(-15, 20);
-	Health = MaxHealth;
-	_healthBar.SetMaxHealth(MaxHealth);
-	_healthBar.SetHealth(Health);
+    [Signal] public delegate void DiedEventHandler(Enemy enemy);
 
-	Anim.Play("default");
-	Scale = new Vector2(1.25f, 1.25f);
-  }
+    public bool CountsForWave { get; set; } = true;
 
-  public override void _PhysicsProcess(double delta)
-  {
-	if (!IsInstanceValid(Player))
-	  return;
+    protected Node2D Player;
+    protected AnimatedSprite2D Anim;
 
-	ChasePlayer();
-	HandleCollisions();
-  }
+    protected bool CanAttack = true;
+    protected int Health;
 
-  protected virtual void ChasePlayer()
-  {
-	Vector2 direction = (Player.GlobalPosition - GlobalPosition).Normalized();
-	direction += SeparationVector() * 0.8f;
-	direction = direction.Normalized();
+    private HealthBar _healthBar;
 
-	if (direction.X < 0)
-	  Anim.FlipH = true;
-	else if (direction.X > 0)
-	  Anim.FlipH = false;
+    // reused static shape avoids allocations
+    private static readonly CircleShape2D SeparationShape = new() { Radius = 16f };
 
-	Velocity = direction * Speed;
-	MoveAndSlide();
-  }
+    private PhysicsDirectSpaceState2D _space;
 
-  private void HandleCollisions()
-  {
-	for (int i = 0; i < GetSlideCollisionCount(); i++)
-	{
-	  var collision = GetSlideCollision(i);
-	  var collider = collision.GetCollider();
+    public override void _Ready()
+    {
+        _space = GetWorld2D().DirectSpaceState;
 
-	  if (collider is Player player)
-		TryDamage(player);
-	}
-  }
+        Player = GetTree().Root.FindChild("Player", recursive: true, owned: false) as Node2D;
+        Anim = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 
-  protected virtual void TryDamage(Player player)
-  {
-	if (!CanAttack) return;
+        HealthBarScene ??= GD.Load<PackedScene>("res://src/UI/HealthBar/HealthBar.tscn");
 
-	player.TakeDamage();
-	CanAttack = false;
+        _healthBar = HealthBarScene.Instantiate<HealthBar>();
+        AddChild(_healthBar);
+        _healthBar.Position = new Vector2(-15, 20);
 
-	var t = GetTree().CreateTimer(AttackCooldown);
-	t.Timeout += () => CanAttack = true;
-  }
+        Health = MaxHealth;
+        _healthBar.SetMaxHealth(MaxHealth);
+        _healthBar.SetHealth(Health);
 
-  public virtual void TakeDamage()
-  {
-	Health--;
-	_healthBar.SetHealth(Health);
+        Anim.Play("default");
+        Scale = new Vector2(1.25f, 1.25f);
+    }
 
-	Anim.Play("damage");
+    public override void _PhysicsProcess(double delta)
+    {
+        if (!IsInstanceValid(Player))
+            return;
 
-	if (Health <= 0)
-	{
-	  Die();
-	  return;
-	}
+        ChasePlayer();
+        HandleCollisions();
+    }
 
-	GetTree().CreateTimer(0.2).Timeout += () => Anim.Play("default");
-  }
+    protected virtual void ChasePlayer()
+    {
+        Vector2 direction = (Player.GlobalPosition - GlobalPosition).Normalized();
 
-  protected virtual void Die()
-  {
-	if (DropTable != null && DropTable.Length > 0 && GD.Randf() < DropChance)
-	{
-	  var scene = DropTable[GD.Randi() % DropTable.Length].Instantiate<Node2D>();
-	  scene.Position = Position;
-	  GetTree().CurrentScene.CallDeferred("add_child", scene);
-	}
+        direction += SeparationVector() * 0.8f;
+        direction = direction.Normalized();
 
-	EmitSignal(SignalName.Died, this);
+        Anim.FlipH = direction.X < 0;
 
-	CallDeferred("queue_free");
-  }
+        Velocity = direction * Speed;
+        MoveAndSlide();
+    }
 
-  private Vector2 SeparationVector()
-  {
-	var space = _space;
+    private void HandleCollisions()
+    {
+        int count = GetSlideCollisionCount();
+        for (int i = 0; i < count; i++)
+        {
+            var collision = GetSlideCollision(i);
+            if (collision.GetCollider() is Player player)
+            {
+                TryDamage(player);
+            }
+        }
+    }
 
-	PhysicsShapeQueryParameters2D p = new()
-	{
-	  Transform = new Transform2D(0, GlobalPosition),
-	  CollisionMask = 1 << 3
-	};
+    protected virtual void TryDamage(Player player)
+    {
+        if (!CanAttack)
+            return;
 
-	p.SetShape(_separationShape);
+        player.TakeDamage();
+        CanAttack = false;
 
-	var hits = space.IntersectShape(p);
+        var timer = GetTree().CreateTimer(AttackCooldown);
+        timer.Timeout += () => CanAttack = true;
+    }
 
-	Vector2 repulsion = Vector2.Zero;
+    public virtual void TakeDamage()
+    {
+        Health--;
+        _healthBar.SetHealth(Health);
 
-	foreach (var hit in hits)
-	{
-	  var colliderVariant = hit["collider"];
-	  Node colliderNode = colliderVariant.As<Node>();
+        Anim.Play("damage");
 
-	  if (colliderNode is Enemy other && other != this)
-	  {
-		repulsion += (GlobalPosition - other.GlobalPosition).Normalized();
-	  }
-	}
+        if (Health <= 0)
+        {
+            Die();
+            return;
+        }
 
-	return repulsion;
-  }
+        GetTree().CreateTimer(0.2).Timeout += () => Anim.Play("default");
+    }
+
+    protected virtual void Die()
+    {
+        if (DropTable.Length > 0 && GD.Randf() < DropChance)
+        {
+            var drop = DropTable[GD.Randi() % DropTable.Length].Instantiate<Node2D>();
+            drop.Position = Position;
+            GetTree().CurrentScene.CallDeferred(MethodName.AddChild, drop);
+        }
+
+        EmitSignal(SignalName.Died, this);
+
+        CallDeferred(MethodName.QueueFree);
+    }
+
+    private Vector2 SeparationVector()
+    {
+        var query = new PhysicsShapeQueryParameters2D
+        {
+            Transform = new Transform2D(0, GlobalPosition),
+            CollisionMask = 1 << 3
+        };
+
+        query.SetShape(SeparationShape);
+
+        var hits = _space.IntersectShape(query);
+
+        Vector2 repulsion = Vector2.Zero;
+
+        foreach (var hit in hits)
+        {
+            if (hit["collider"].As<Node>() is Enemy other && other != this)
+            {
+                repulsion += (GlobalPosition - other.GlobalPosition).Normalized();
+            }
+        }
+
+        return repulsion;
+    }
 }
