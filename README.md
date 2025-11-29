@@ -1,6 +1,6 @@
 # Malwave
 
-A fast-paced wave-based arcade arena shooter where you fight off computer malware inside a neon cyberspace grid.
+A 2D fast-paced wave-based arcade arena shooter where you fight off computer malware inside a neon cyberspace grid.
 
 ## Premise
 
